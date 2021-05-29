@@ -4,7 +4,6 @@ namespace WaterSortPuzzleSolver
 {
     internal class DFS
     {
-        internal bool IsGo = true;
         internal List<Status> HasDealed = new List<Status>();
         internal List<KeyValuePair<int, int>> Actions = null;
 
@@ -12,12 +11,15 @@ namespace WaterSortPuzzleSolver
         {
             HasDealed.Add(status);
             List<Status> nextStatuses = status.GetNextStatuses(out Actions);
+            #region 找到结果立刻返回
             if (Actions != null)
             {
                 return Actions;
             }
+            #endregion
             foreach (Status nextStatus in nextStatuses)
             {
+                #region 不重复处理
                 bool hasDealed = false;
                 foreach (Status statusHasDealed in HasDealed)
                 {
@@ -31,11 +33,14 @@ namespace WaterSortPuzzleSolver
                 {
                     continue;
                 }
+                #endregion
                 Deal(nextStatus);
+                #region 找到结果立刻返回
                 if (Actions != null)
                 {
                     return Actions;
                 }
+                #endregion
             }
             return Actions;
         }

@@ -10,6 +10,11 @@ namespace WaterSortPuzzleSolver
 
         private List<KeyValuePair<int, int>> lastActions = new List<KeyValuePair<int, int>>();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="lastAction">经由哪一步行动至此节点</param>
         public Status(Status status, KeyValuePair<int, int> lastAction)
         {
             foreach (Glass glass in status.Glasses)
@@ -34,19 +39,28 @@ namespace WaterSortPuzzleSolver
             set { glasses = value; }
         }
 
+        /// <summary>
+        /// 由根节点至当前节点进行过的行动
+        /// </summary>
         internal List<KeyValuePair<int, int>> LastActions
         {
             get { return lastActions; }
             set { lastActions = value; }
         }
 
+        /// <summary>
+        /// 获得下一步可以进行的行动
+        /// </summary>
+        /// <returns></returns>
         public List<KeyValuePair<int, int>> GetCanActionList()
         {
             List<KeyValuePair<int, int>> canPourList = new List<KeyValuePair<int, int>>();
             for (int i = 0; i < Glasses.Count; i++)
             {
+                //A倒入B与B倒入A结果不同，故从0开始
                 for (int j = 0; j < Glasses.Count; j++)
                 {
+                    //不能倒给自己
                     if (i == j)
                     {
                         continue;
@@ -60,6 +74,11 @@ namespace WaterSortPuzzleSolver
             return canPourList;
         }
 
+        /// <summary>
+        /// 是否已达到完成状态
+        /// </summary>
+        /// <remarks>即每一个杯子要么杯中水为同一颜色，要么没有水</remarks>
+        /// <returns></returns>
         public bool IsCompleted()
         {
             foreach (Glass glass in Glasses)
@@ -72,9 +91,17 @@ namespace WaterSortPuzzleSolver
             return true;
         }
 
+        /// <summary>
+        /// 获得当前节点经过可进行的活动后得到的节点列表
+        /// </summary>
+        /// <param name="actions">
+        /// 由根节点起可以达到完成状态节点的行动列表
+        /// <para>如果能够找到则返回一个列表，否则返回null</para>
+        /// </param>
+        /// <returns></returns>
         public List<Status> GetNextStatuses(out List<KeyValuePair<int, int>> actions)
         {
-            actions = null;
+            actions = null;//TODO:是否可以out一个action或Status
             List<Status> result = new List<Status>();
             foreach (KeyValuePair<int, int> item in this.GetCanActionList())
             {
@@ -95,6 +122,11 @@ namespace WaterSortPuzzleSolver
 
         public bool IsEqual(Status status)
         {
+            /* 1. 将Glass中的Colors(Color[])分别转化为int后连接成一个整数
+             *      如：[Black,Black,DarkBlue,DarkBlue]转化成1122
+             * 2. 将这些int类型存储为数组的形式
+             * 3. 将数组排序，并进行比较
+             */
             int[] statusIntArray1 = new int[this.Glasses.Count];
             for (int i = 0; i < this.Glasses.Count; i++)
             {
@@ -119,6 +151,16 @@ namespace WaterSortPuzzleSolver
             Array.Sort(statusIntArray1);
             Array.Sort(statusIntArray2);
             return Enumerable.SequenceEqual(statusIntArray1, statusIntArray2);
+        }
+
+        public override string ToString()
+        {
+            string result = "";
+            foreach (Glass glass in Glasses)
+            {
+                result += glass.ToString() + "\n";
+            }
+            return result;
         }
     }
 }

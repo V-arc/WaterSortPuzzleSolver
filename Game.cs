@@ -9,12 +9,12 @@ namespace WaterSortPuzzleSolver
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
+
             DFS dFS = new DFS();
             string statusStr = System.IO.File.ReadAllText(@"Puzzle.txt");
             Status initialStatus = new Status(statusStr);
             var solver = dFS.Deal(initialStatus);
             stopwatch.Stop();
-
 
             foreach (var item in solver)
             {

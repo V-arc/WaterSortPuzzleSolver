@@ -38,8 +38,8 @@ namespace WaterSortPuzzleSolver
 
         public static bool CanPour(Glass pouringGlass, Glass pouredGlass)
         {
-            Color color;
-            int num = pouringGlass.GetTopWaterNumAndColor(out color);
+            int num = pouringGlass.GetTopWaterNumAndColor(out Color color);
+            //空杯不能倾倒
             if (num == 0)
             {
                 return false;
@@ -77,7 +77,7 @@ namespace WaterSortPuzzleSolver
         }
 
         /// <summary>
-        /// 获得杯子水总数
+        /// 获得杯子中水总数
         /// </summary>
         /// <returns></returns>
         internal int GetWaterNum()
@@ -123,13 +123,14 @@ namespace WaterSortPuzzleSolver
                 {
                     continue;
                 }
-                //顶部
+                //第一次到达顶部
                 if (tempColor == Color.NULL)
                 {
                     tempColor = Colors[i];
                     result++;
                     continue;
                 }
+                //不同颜色则退出
                 if (tempColor != Colors[i])
                 {
                     break;
@@ -155,13 +156,14 @@ namespace WaterSortPuzzleSolver
                 {
                     continue;
                 }
-                //顶部
+                //第一次到达顶部
                 if (color == Color.NULL)
                 {
                     color = Colors[i];
                     result++;
                     continue;
                 }
+                //不同颜色则退出
                 if (color != Colors[i])
                 {
                     break;
@@ -191,14 +193,17 @@ namespace WaterSortPuzzleSolver
             Color tempColor = Color.NULL;
             for (int i = 0; i < MaximumWaterVolume; i++)
             {
+                //排除上面空的位置
                 if (glass.Colors[i] == Color.NULL)
                 {
                     continue;
                 }
+                //到达颜色不同的位置则退出
                 if (tempColor != Color.NULL && tempColor != glass.Colors[i])
                 {
                     break;
                 }
+                //第一次到达有颜色的位置
                 if (tempColor == Color.NULL && glass.Colors[i] != Color.NULL)
                 {
                     tempColor = glass.Colors[i];
@@ -209,6 +214,8 @@ namespace WaterSortPuzzleSolver
 
         public void Poured(int num, Color color)
         {
+            /* 从下向上将num数量的Color.NULL设置为color */
+
             Glass glass = this;
             for (int i = MaximumWaterVolume - 1; i >= 0; i--)
             {
@@ -229,7 +236,7 @@ namespace WaterSortPuzzleSolver
             string result = "";
             foreach (Color color in this.Colors)
             {
-                result += color.ToString() + " ";
+                result += color.ToString() + "\t";
             }
             return result.Trim();
         }
